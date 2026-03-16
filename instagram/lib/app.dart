@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/main_screen.dart';
+import 'screens/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,7 +23,10 @@ class MyApp extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
         ),
       ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const MainScreen(),
+      },
     );
   }
 }

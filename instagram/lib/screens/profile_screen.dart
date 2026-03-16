@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/post_item.dart';
 import 'chat_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final List<PostItem> posts;
   final String profileImage;
   final String profileName;
@@ -19,6 +19,134 @@ class ProfileScreen extends StatelessWidget {
   });
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
+  late AnimationController _profileController;
+  late Animation<double> _profileOpacity;
+  late Animation<Offset> _profileSlide;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _profileOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _profileController, curve: Curves.easeIn),
+    );
+    _profileSlide = Tween<Offset>(begin: const Offset(0, -0.2), end: Offset.zero).animate(
+      CurvedAnimation(parent: _profileController, curve: Curves.easeOut),
+    );
+    _profileController.forward();
+  }
+
+  @override
+  void dispose() {
+    _profileController.dispose();
+    super.dispose();
+  }
+
+  void _showFollowingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: const Color(0xFF1a1a1a),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Following',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 30),
+              // Following user
+              _buildFollowingUserTile(
+                'JHarper',
+                'images/tele17.jpg',
+                true,
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFollowingUserTile(String name, String imageUrl, bool isVerified) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF262626),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundImage: AssetImage(imageUrl),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (isVerified) ...[
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                        size: 14,
+                      ),
+                    ],
+                  ],
+                ),
+                Text(
+                  'Following',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              username,
+              widget.username,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(width: 4),
@@ -55,13 +183,11 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 42,
-                        backgroundImage: AssetImage(profileImage),
+                        backgroundImage: AssetImage(widget.profileImage),
                       ),
                       const SizedBox(height: 10),
-
-                      // NAMA TANPA CENTANG BIRU
                       Text(
-                        profileName,
+                        widget.profileName,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -75,18 +201,20 @@ class ProfileScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _ProfileStat(
-                          value: posts.length.toString(),
+                          value: widget.posts.length.toString(),
                           label: 'Posts',
                         ),
                         const _ProfileStat(value: '2M', label: 'Followers'),
-                        const _ProfileStat(value: '1', label: 'Following'),
+                        GestureDetector(
+                          onTap: () => _showFollowingDialog(context),
+                          child: const _ProfileStat(value: '1', label: 'Following'),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Align(
@@ -97,7 +225,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
               child: Row(
@@ -131,10 +258,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 8),
             const Divider(color: Colors.white24, height: 1),
-
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -148,18 +273,17 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-
             GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: posts.length,
+              itemCount: widget.posts.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 2,
                 mainAxisSpacing: 2,
               ),
               itemBuilder: (context, index) {
-                final post = posts[index];
+                final post = widget.posts[index];
                 return Image.asset(
                   post.imageUrl,
                   fit: BoxFit.cover,

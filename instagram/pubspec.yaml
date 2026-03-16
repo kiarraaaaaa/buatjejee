@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   just_audio: ^0.10.5
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,10 @@ flutter:
     - images/tele13.jpg
     - images/tele14.jpg
     - images/tele15.jpg
+    - images/tele16.jpg
+    - images/tele17.jpg
+    - images/tele18.jpg
+
     - audio/Again.mp3
     - audio/HimandI.mp3
     - audio/Ophelia.mp3

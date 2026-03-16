@@ -7,10 +7,10 @@ class PostCard extends StatefulWidget {
   final VoidCallback onLikeToggle;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.post,
     required this.onLikeToggle,
-  }) : super(key: key);
+  });
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -185,7 +185,7 @@ class _PostCardState extends State<PostCard>
 
               const SizedBox(width: 14),
 
-              const Icon(Icons.send_outlined, size: 26),
+              const Icon(Icons.send, size: 26),
 
               const Spacer(),
 

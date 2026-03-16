@@ -1,369 +1,500 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/audio_controller.dart';
+import '../widgets/mini_player.dart';
 
 class LikesScreen extends StatefulWidget {
-const LikesScreen({super.key});
+  const LikesScreen({super.key});
 
-@override
-State<LikesScreen> createState() => _LikesScreenState();
+  @override
+  State<LikesScreen> createState() => _LikesScreenState();
 }
 
 class _LikesScreenState extends State<LikesScreen> {
+  final AudioController audioController = AudioController();
 
-final AudioPlayer player = AudioPlayer();
+  final List<Map<String, dynamic>> songs = [
+    {
+      "title": "Him and I",
+      "artist": "G-Eazy & Halsey",
+      "image": "images/tele11.jpg",
+      "audio": "audio/HimandI.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Party 4 U",
+      "artist": "Charli XCX",
+      "image": "images/tele9.jpg",
+      "audio": "audio/Party.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Rock That Body x Outside",
+      "artist": "Nightdrives",
+      "image": "images/tele8.jpg",
+      "audio": "audio/Rock.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Fetish",
+      "artist": "Selena Gomez ft. Gucci Mane",
+      "image": "images/tele10.jpg",
+      "audio": "audio/Fetish.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Again",
+      "artist": "Noah Cyrus",
+      "image": "images/tele7.jpg",
+      "audio": "audio/Again.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Flatline",
+      "artist": "Justin Bieber",
+      "image": "images/tele6.jpg",
+      "audio": "audio/flatline.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Shameless",
+      "artist": "Camilla Cabello",
+      "image": "images/tele12.jpg",
+      "audio": "audio/Shameless.mp3",
+      "liked": false,
+    },
+    {
+      "title": "Boyfriend",
+      "artist": "Justin Bieber",
+      "image": "images/tele13.jpg",
+      "audio": "audio/Boyfriend.mp3",
+      "liked": false,
+    },
+    {
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swift",
+      "image": "images/tele14.jpg",
+      "audio": "audio/Ophelia.mp3",
+      "liked": false,
+    },
+    {
+      "title": "The Man Who Can't Be Moved",
+      "artist": "The Script",
+      "image": "images/tele15.jpg",
+      "audio": "audio/TheMan.mp3",
+      "liked": false,
+    },
+  ];
 
-int currentSongIndex = -1;
-Duration position = Duration.zero;
-Duration duration = Duration.zero;
-bool isPlaying = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadLikedStatus();
+    audioController.init();
+    audioController.setPlaylist(songs);
+  }
 
-List<Map<String, dynamic>> songs = [
-{
-"title": "Him and I",
-"artist": "G-Eazy & Halsey",
-"image": "images/tele11.jpg",
-"audio": "audio/HimandI.mp3",
-"liked": false
-},
-{
-"title": "Party 4 U",
-"artist": "Charli XCX",
-"image": "images/tele9.jpg",
-"audio": "audio/Party.mp3",
-"liked": false
-},
-{
-"title": "Rock That Body x Outside",
-"artist": "Nightdrives",
-"image": "images/tele8.jpg",
-"audio": "audio/Rock.mp3",
-"liked": false
-},
-{
-"title": "Fetish",
-"artist": "Selena Gomez ft. Gucci Mane",
-"image": "images/tele10.jpg",
-"audio": "audio/Fetish.mp3",
-"liked": false
-},
-{
-"title": "Again",
-"artist": "Noah Cyrus",
-"image": "images/tele7.jpg",
-"audio": "audio/Again.mp3",
-"liked": false
-},
-{
-"title": "Flatline",
-"artist": "Justin Bieber",
-"image": "images/tele6.jpg",
-"audio": "audio/flatline.mp3",
-"liked": false
-},
-{
-"title": "Shameless",
-"artist": "Camilla Cabello",
-"image": "images/tele12.jpg",
-"audio": "audio/Shameless.mp3",
-"liked": false
-},
-{
-"title": "Boyfriend",
-"artist": "Justin Bieber",
-"image": "images/tele13.jpg",
-"audio": "audio/Boyfriend.mp3",
-"liked": false
-},
-{
-"title": "The Fate of Ophelia",
-"artist": "Taylor Swift",
-"image": "images/tele14.jpg",
-"audio": "audio/Ophelia.mp3",
-"liked": false
-},
-{
-"title": "The Man Who Can't Be Moved",
-"artist": "The Script",
-"image": "images/tele15.jpg",
-"audio": "audio/TheMan.mp3",
-"liked": false
-},
-];
-
-@override
-void initState() {
-super.initState();
-
-player.positionStream.listen((p) {
-  setState(() {
-    position = p;
-  });
-});
-
-player.durationStream.listen((d) {
-  if (d != null) {
+  Future<void> _loadLikedStatus() async {
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      duration = d;
+      for (int i = 0; i < songs.length; i++) {
+        songs[i]["liked"] = prefs.getBool('liked_$i') ?? false;
+      }
     });
   }
-});
 
-player.playerStateStream.listen((state) {
-  setState(() {
-    isPlaying = state.playing;
-  });
-});
+  Future<void> _saveLikedStatus(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('liked_$index', songs[index]["liked"]);
+  }
 
-}
-
-Future<void> playSong(String path, int index) async {
-try {
-await player.stop();
-await player.setAsset(path);
-player.play();
-
-  setState(() {
-    currentSongIndex = index;
-  });
-} catch (e) {
-  print(e);
-}
-
-}
-
-void nextSong() {
-if (currentSongIndex < songs.length - 1) {
-playSong(songs[currentSongIndex + 1]["audio"], currentSongIndex + 1);
-}
-}
-
-String formatTime(Duration d) {
-String minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-String seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-return "$minutes:$seconds";
-}
-
-@override
-void dispose() {
-player.dispose();
-super.dispose();
-}
-
-@override
-Widget build(BuildContext context) {
-
-return Scaffold(
-  backgroundColor: Colors.black,
-
-  body: SafeArea(
-    child: Column(
-      children: [
-
-        Expanded(
-          child: ListView(
-            children: [
-
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        "images/tele1.jpg",
-                        height: 180,
-                        width: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      "Ride or Die",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 6),
-
-                    const Text(
-                      "Top Songs That Suit You So Much",
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 14,
-                      ),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        playSong(songs[0]["audio"], 0);
-                      },
-                      icon: const Icon(Icons.play_arrow),
-                      label: const Text("Play Playlist"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const Divider(color: Colors.white24),
-
-              ...songs.asMap().entries.map((entry) {
-
-                int index = entry.key;
-                var song = entry.value;
-
-                return ListTile(
-                  onTap: () {
-                    playSong(song["audio"], index);
-                  },
-
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      song["image"],
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-
-                  title: Text(
-                    song["title"],
-                    style: const TextStyle(color: Colors.white),
-                  ),
-
-                  subtitle: Text(
-                    song["artist"],
-                    style: const TextStyle(color: Colors.white54),
-                  ),
-
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-
-                      IconButton(
-                        icon: Icon(
-                          song["liked"]
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: song["liked"]
-                              ? Colors.red
-                              : Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            song["liked"] = !song["liked"];
-                          });
-                        },
-                      ),
-
-                      IconButton(
-                        icon: const Icon(Icons.play_arrow, color: Colors.white),
-                        onPressed: () {
-                          playSong(song["audio"], index);
-                        },
-                      ),
-
-                    ],
-                  ),
-                );
-
-              }).toList(),
-            ],
-          ),
-        ),
-
-        if (currentSongIndex != -1)
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color(0xff090909),
+      body: Stack(
+        children: [
           Container(
-            height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: const BoxDecoration(
-              color: Color(0xFF121212),
-              border: Border(
-                top: BorderSide(color: Colors.white12),
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff120c1c),
+                  Color(0xff090909),
+                  Color(0xff090909),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-
-            child: Row(
+          ),
+          SafeArea(
+            child: Column(
               children: [
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.asset(
-                    songs[currentSongIndex]["image"],
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Liked Songs",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 18),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(28),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      const Color(0xff8B5CF6).withOpacity(0.9),
+                                      const Color(0xffEC4899).withOpacity(0.7),
+                                      const Color(0xff111111),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xff8B5CF6)
+                                          .withOpacity(0.2),
+                                      blurRadius: 25,
+                                      offset: const Offset(0, 12),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(22),
+                                      child: Image.asset(
+                                        "images/tele1.jpg",
+                                        height: 220,
+                                        width: 220,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 18),
+                                    const Text(
+                                      "Ride or Die",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "${songs.where((e) => e["liked"] == true).length} songs you vibe with the most",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 18),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton.icon(
+                                            onPressed: songs.isEmpty
+                                                ? null
+                                                : () {
+                                                    audioController.setPlaylist(
+                                                      songs,
+                                                    );
+                                                    audioController.playSong(
+                                                      songs[0]["audio"],
+                                                      0,
+                                                    );
+                                                  },
+                                            icon: const Icon(Icons.play_arrow),
+                                            label: const Text("Play"),
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 0,
+                                              backgroundColor: Colors.white,
+                                              foregroundColor: Colors.black,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 14,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: songs.isEmpty
+                                                ? null
+                                                : () {
+                                                    final likedSongs = songs
+                                                        .where(
+                                                          (s) =>
+                                                              s["liked"] == true,
+                                                        )
+                                                        .toList();
 
-                      Text(
-                        songs[currentSongIndex]["title"],
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                                                    if (likedSongs.isEmpty) {
+                                                      audioController.setPlaylist(
+                                                        songs,
+                                                      );
+                                                      audioController.playSong(
+                                                        songs[0]["audio"],
+                                                        0,
+                                                      );
+                                                    } else {
+                                                      final firstLiked =
+                                                          songs.indexOf(
+                                                        likedSongs[0],
+                                                      );
+                                                      audioController.setPlaylist(
+                                                        songs,
+                                                      );
+                                                      audioController.playSong(
+                                                        songs[firstLiked]
+                                                            ["audio"],
+                                                        firstLiked,
+                                                      );
+                                                    }
+                                                  },
+                                            icon: const Icon(Icons.favorite),
+                                            label: const Text("Play Liked"),
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              side: BorderSide(
+                                                color: Colors.white
+                                                    .withOpacity(0.25),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 14,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 22),
+                            ],
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final song = songs[index];
 
-                      Text(
-                        songs[currentSongIndex]["artist"],
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 12,
+                              return ValueListenableBuilder<int>(
+                                valueListenable:
+                                    audioController.currentSongNotifier,
+                                builder: (context, currentIndex, child) {
+                                  final isCurrent = currentIndex == index;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      audioController.setPlaylist(songs);
+                                      audioController.playSong(
+                                        song["audio"],
+                                        index,
+                                      );
+                                    },
+                                    child: AnimatedContainer(
+                                      duration:
+                                          const Duration(milliseconds: 250),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 7,
+                                      ),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: isCurrent
+                                            ? const Color(0xff1E1B2E)
+                                            : Colors.white.withOpacity(0.05),
+                                        border: Border.all(
+                                          color: isCurrent
+                                              ? const Color(0xff8B5CF6)
+                                              : Colors.white.withOpacity(0.06),
+                                        ),
+                                        boxShadow: isCurrent
+                                            ? [
+                                                BoxShadow(
+                                                  color: const Color(0xff8B5CF6)
+                                                      .withOpacity(0.18),
+                                                  blurRadius: 18,
+                                                  offset: const Offset(0, 8),
+                                                ),
+                                              ]
+                                            : [],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                child: Image.asset(
+                                                  song["image"],
+                                                  width: 66,
+                                                  height: 66,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              if (isCurrent)
+                                                Container(
+                                                  width: 66,
+                                                  height: 66,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black
+                                                        .withOpacity(0.35),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      16,
+                                                    ),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.graphic_eq_rounded,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 14),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  song["title"],
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight: isCurrent
+                                                        ? FontWeight.w800
+                                                        : FontWeight.w600,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  song["artist"],
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white60,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                song["liked"] = !song["liked"];
+                                              });
+                                              _saveLikedStatus(index);
+                                            },
+                                            icon: AnimatedScale(
+                                              scale: song["liked"] ? 1.2 : 1.0,
+                                              duration: const Duration(milliseconds: 200),
+                                              child: Icon(
+                                                song["liked"]
+                                                    ? Icons.favorite_rounded
+                                                    : Icons.favorite_border_rounded,
+                                                color: song["liked"]
+                                                    ? Colors.pinkAccent
+                                                    : Colors.white70,
+                                              ),
+                                            ),
+                                          ),
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable: audioController
+                                                .isPlayingNotifier,
+                                            builder:
+                                                (context, isPlaying, child) {
+                                              return IconButton(
+                                                onPressed: () {
+                                                  audioController.setPlaylist(
+                                                    songs,
+                                                  );
+                                                  audioController.playSong(
+                                                    song["audio"],
+                                                    index,
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  isCurrent && isPlaying
+                                                      ? Icons
+                                                          .pause_circle_filled_rounded
+                                                      : Icons
+                                                          .play_circle_fill_rounded,
+                                                  size: 30,
+                                                  color: isCurrent
+                                                      ? const Color(0xffA78BFA)
+                                                      : Colors.white,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            childCount: songs.length,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-
                     ],
                   ),
                 ),
-
-                IconButton(
-                  icon: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    if (isPlaying) {
-                      player.pause();
-                    } else {
-                      player.play();
-                    }
+                ValueListenableBuilder<bool>(
+                  valueListenable: audioController.isMiniPlayerVisible,
+                  builder: (context, visible, child) {
+                    return AnimatedSlide(
+                      offset: visible ? Offset.zero : const Offset(0, 1),
+                      duration: const Duration(milliseconds: 300),
+                      child: visible ? MiniPlayer(controller: audioController) : const SizedBox.shrink(),
+                    );
                   },
                 ),
-
-                IconButton(
-                  icon: const Icon(Icons.skip_next, color: Colors.white),
-                  onPressed: nextSong,
-                ),
-
               ],
             ),
           ),
-      ],
-    ),
-  ),
-);
-
-}
+        ],
+      ),
+    );
+  }
 }

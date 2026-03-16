@@ -13,8 +13,8 @@ class DummyData {
         username: 'xeno_foster',
         userFullName: 'xeno foster',
         userAvatar: profileImage,
-        imageUrl: 'images/tele.jpg',
-        caption: 'hello guys! just wanna let you know that he is my partners.',
+        imageUrl: 'images/tele16.jpg',
+        caption: 'hello guys! just wanna let you know that he is my partner.',
         likes: 184182,
         comments: [
           'bro this shot is cold',
@@ -27,7 +27,7 @@ class DummyData {
         username: 'xeno_foster',
         userFullName: 'xeno foster',
         userAvatar: profileImage,
-        imageUrl: 'images/tele1.jpg',
+        imageUrl: 'images/tele18.jpg',
         caption: 'late night ride with the crew.',
         likes: 222410,
         comments: [
