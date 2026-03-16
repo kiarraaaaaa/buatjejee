@@ -1,0 +1,50 @@
+name: instagram
+description: "Instagram style rider app"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  just_audio: ^0.10.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - images/tele.jpg
+    - images/tele1.jpg
+    - images/tele2.jpg
+    - images/tele3.jpg
+    - images/tele4.jpg
+    - images/tele5.jpg
+    - images/tele6.jpg
+    - images/tele7.jpg
+    - images/tele8.jpg
+    - images/tele9.jpg
+    - images/tele10.jpg
+    - images/tele11.jpg
+    - images/tele12.jpg
+    - images/tele13.jpg
+    - images/tele14.jpg
+    - images/tele15.jpg
+    - audio/Again.mp3
+    - audio/HimandI.mp3
+    - audio/Ophelia.mp3
+    - audio/TheMan.mp3
+    - audio/Rock.mp3
+    - audio/Fetish.mp3
+    - audio/flatline.mp3
+    - audio/Boyfriend.mp3
+    - audio/Party.mp3
+    - audio/Shameless.mp3
