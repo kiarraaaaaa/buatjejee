@@ -58,64 +58,91 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [
-      /// HOME
-      HomeScreen(
-        posts: posts,
-        onLikeToggle: toggleLike,
-      ),
+    try {
+      final screens = [
+        /// HOME
+        HomeScreen(
+          posts: posts,
+          onLikeToggle: toggleLike,
+        ),
 
-      /// PLAYLIST SCREEN
-      const LikesScreen(),
+        /// PLAYLIST SCREEN
+        const LikesScreen(),
 
-      /// PROFILE
-      ProfileScreen(
-        posts: posts,
-        profileImage: DummyData.profileImage,
-        profileName: DummyData.profileName,
-        username: DummyData.username,
-        onLikeToggle: toggleLike,
-      ),
-    ];
+        /// PROFILE
+        ProfileScreen(
+          posts: posts,
+          profileImage: DummyData.profileImage,
+          profileName: DummyData.profileName,
+          username: DummyData.username,
+          onLikeToggle: toggleLike,
+        ),
+      ];
 
-    return Scaffold(
-      body: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (!_isAnimating) {
-            // Swipe right - go to previous screen
-            if (details.primaryVelocity! > 0) {
-              if (currentIndex > 0) {
-                _handleTabChange(currentIndex - 1);
+      return Scaffold(
+        body: GestureDetector(
+          onHorizontalDragEnd: (details) {
+            if (!_isAnimating) {
+              // Swipe right - go to previous screen
+              if (details.primaryVelocity! > 0) {
+                if (currentIndex > 0) {
+                  _handleTabChange(currentIndex - 1);
+                }
+              }
+              // Swipe left - go to next screen
+              else if (details.primaryVelocity! < 0) {
+                if (currentIndex < 2) {
+                  _handleTabChange(currentIndex + 1);
+                }
               }
             }
-            // Swipe left - go to next screen
-            else if (details.primaryVelocity! < 0) {
-              if (currentIndex < 2) {
-                _handleTabChange(currentIndex + 1);
-              }
-            }
-          }
-        },
-        child: FadeTransition(
-          opacity: _pageOpacity,
-          child: SlideTransition(
-            position: _pageSlide,
-            child: ScaleTransition(
-              scale: _pageScale,
-              child: screens[currentIndex],
+          },
+          child: FadeTransition(
+            opacity: _pageOpacity,
+            child: SlideTransition(
+              position: _pageSlide,
+              child: ScaleTransition(
+                scale: _pageScale,
+                child: screens[currentIndex],
+              ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          if (index != currentIndex && !_isAnimating) {
-            _handleTabChange(index);
-          }
-        },
-      ),
-    );
+        bottomNavigationBar: BottomNavBar(
+          currentIndex: currentIndex,
+          onTap: (index) {
+            if (index != currentIndex && !_isAnimating) {
+              _handleTabChange(index);
+            }
+          },
+        ),
+      );
+    } catch (e, stackTrace) {
+      debugPrint('Error in MainScreen build: $e');
+      debugPrint('StackTrace: $stackTrace');
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Error Loading App',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  e.toString(),
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   void _handleTabChange(int index) {

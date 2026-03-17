@@ -17,60 +17,24 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late List<AnimationController> _controllers;
-  late List<Animation<double>> _animations;
-
-  @override
-  void initState() {
-    super.initState();
-    _controllers = List<AnimationController>.generate(
-      widget.posts.length + 2,
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 600),
-        vsync: this,
-      ),
-    );
-
-    _animations = _controllers.map((controller) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeOut),
-      );
-    }).toList();
-
-    // Staggered animation
-    for (int i = 0; i < _controllers.length; i++) {
-      Future.delayed(Duration(milliseconds: i * 100), () {
-        if (mounted && i < _controllers.length) {
-          _controllers[i].forward();
-        }
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView.builder(
-        itemCount: widget.posts.length + 2,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return FadeTransition(
-              opacity: _animations[0],
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(-0.3, 0),
-                  end: Offset.zero,
-                ).animate(_animations[0]),
-                child: const Padding(
+    try {
+      if (widget.posts.isEmpty) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+
+      return SafeArea(
+        child: ListView.builder(
+          itemCount: widget.posts.length + 2,
+          itemBuilder: (context, index) {
+            try {
+              // Header
+              if (index == 0) {
+                return const Padding(
                   padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: Row(
                     children: [
@@ -87,42 +51,45 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       Icon(Icons.send_outlined),
                     ],
                   ),
-                ),
-              ),
-            );
-          }
+                );
+              }
 
-          if (index == 1) {
-            return FadeTransition(
-              opacity: _animations[1],
-              child: StoryWidget(
-                stories: [
-                  'images/tele.jpg',
-                  'images/tele1.jpg',
-                  'images/tele2.jpg',
-                  'images/tele3.jpg',
-                  'images/tele5.jpg',
-                ],
-              ),
-            );
-          }
+              // Story widget
+              if (index == 1) {
+                return const StoryWidget(
+                  stories: [
+                    'images/tele20.jpg',
+                    'images/tele.jpg',
+                    'images/tele21.jpg',
+                    'images/tele22.jpg',
+                    'images/tele23.jpg',
+                  ],
+                );
+              }
 
-          final post = widget.posts[index - 2];
-          return FadeTransition(
-            opacity: _animations[index],
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 0.2),
-                end: Offset.zero,
-              ).animate(_animations[index]),
-              child: PostCard(
+              // Posts
+              final postIndex = index - 2;
+              if (postIndex < 0 || postIndex >= widget.posts.length) {
+                return const SizedBox.shrink();
+              }
+
+              final post = widget.posts[postIndex];
+              return PostCard(
                 post: post,
                 onLikeToggle: () => widget.onLikeToggle(post.id),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+              );
+            } catch (e) {
+              debugPrint('Error building item $index: $e');
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error in HomeScreen build: $e');
+      return Center(
+        child: Text('Error loading home screen: $e'),
+      );
+    }
   }
 }

@@ -24,8 +24,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
   late AnimationController _profileController;
-  late Animation<double> _profileOpacity;
-  late Animation<Offset> _profileSlide;
 
   @override
   void initState() {
@@ -33,12 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     _profileController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
-    );
-    _profileOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _profileController, curve: Curves.easeIn),
-    );
-    _profileSlide = Tween<Offset>(begin: const Offset(0, -0.2), end: Offset.zero).animate(
-      CurvedAnimation(parent: _profileController, curve: Curves.easeOut),
     );
     _profileController.forward();
   }

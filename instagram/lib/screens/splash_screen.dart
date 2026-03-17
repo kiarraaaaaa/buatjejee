@@ -122,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Riders Community',
+                      'Duo Strongest.',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withOpacity(0.6),

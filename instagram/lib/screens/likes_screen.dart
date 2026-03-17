@@ -579,25 +579,28 @@ class _LikesScreenState extends State<LikesScreen> with TickerProviderStateMixin
                                                 ),
                                               ),
                                               ValueListenableBuilder<bool>(
-                                                valueListenable:
-                                                    audioController
-                                                        .isPlayingNotifier,
-                                                builder: (context,
-                                                    isPlaying, child) {
+                                                valueListenable: audioController.isPlayingNotifier,
+                                                builder: (context, isPlaying, child) {
+                                                  final currentIndex = audioController.currentIndex;
+                                                  final isCurrent = currentIndex == index;
+                                                  
+                                                  debugPrint("Button rebuild - index: $index, currentIndex: $currentIndex, isCurrent: $isCurrent, isPlaying: $isPlaying");
+                                                  
                                                   return IconButton(
                                                     onPressed: () {
-                                                      audioController
-                                                          .setPlaylist(
-                                                        songs,
-                                                      );
-                                                      audioController
-                                                          .playSong(
-                                                        song["audio"],
-                                                        index,
-                                                      );
+                                                      debugPrint("Button pressed - isCurrent: $isCurrent, isPlaying: $isPlaying");
+                                                      if (isCurrent) {
+                                                        audioController.togglePlayPause();
+                                                      } else {
+                                                        audioController.setPlaylist(songs);
+                                                        audioController.playSong(
+                                                          song["audio"],
+                                                          index,
+                                                        );
+                                                      }
                                                     },
                                                     icon: Icon(
-                                                      isCurrent
+                                                      isCurrent && isPlaying
                                                           ? Icons.pause_circle_filled_rounded
                                                           : Icons.play_circle_fill_rounded,
                                                       size: 30,

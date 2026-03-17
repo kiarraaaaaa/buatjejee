@@ -28,12 +28,12 @@ class DummyData {
         userFullName: 'xeno foster',
         userAvatar: profileImage,
         imageUrl: 'images/tele19.jpg',
-        caption: 'late night ride with the crew.',
+        caption: 'late night with him.',
         likes: 222410,
         comments: [
           'this goes insanely hard',
-          'mono tone looks perfect',
-          'rider era fr',
+          'JEXE looks perfect!',
+          'duo puncak fr',
         ],
       ),
       PostItem(
@@ -46,8 +46,8 @@ class DummyData {
         likes: 167194,
         comments: [
           'super cool frame',
-          'love the street mood',
-          'this is fire',
+          'XJ vibes badazzzz af',
+          'this is fireee',
         ],
       ),
       PostItem(
@@ -56,7 +56,7 @@ class DummyData {
         userFullName: 'xeno foster',
         userAvatar: profileImage,
         imageUrl: 'images/tele3.jpg',
-        caption: 'duo, no noise, just motion.',
+        caption: 'with harper, everything feels perfect.',
         likes: 102461,
         comments: [
           'crazy clean post',
@@ -75,19 +75,18 @@ class DummyData {
         comments: [
           'the composition is crazy good',
           'need more posts like this',
-          'hot as fuck'
+          'xeno and harper are hot as fuck'
         ],
       ),
     ];
   }
 
   static const List<String> chatMessages = [
-    'hello, je',
+    'hello, partner.',
     'how? you like it?',
-    'its our secret talk',
     'i just want to say, thank you for everything.',
     'and im so sorry bout all my mistakes ive ever did',
-    'tbh,i love us in this way',
+    'tbh, i love us in this way',
     'lu adalah satu satunya yang gua punya, di telegram ini.',
     'thank you udah bertahan sama sikap gua yang kadang menyebalkan',
     'makasi tetap bertahan walau kita pernah beda pendapat',
@@ -98,7 +97,7 @@ class DummyData {
     'tetep ceritain segala hal yang perlu gua tau',
     'because i love heard a lot bout you.',
     'you can text here but you cant send it. just replied on my telegram, kay?',
-    'last bbc, hope we keep goin like this.',
+    'last, hope we keep goin like this.',
     'not in a romantic way but care each other.'
   ];
 }

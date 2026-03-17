@@ -28,7 +28,6 @@ class _StoryWidgetState extends State<StoryWidget> with TickerProviderStateMixin
     );
 
     _storyAnimations = _storyControllers.asMap().entries.map((entry) {
-      int index = entry.key;
       AnimationController controller = entry.value;
 
       return Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -106,7 +105,7 @@ class _StoryWidgetState extends State<StoryWidget> with TickerProviderStateMixin
                         ),
                         child: ClipOval(
                           child: Image.asset(
-                            "images/tele${20 + index}.jpg",
+                            widget.stories[index],
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -160,7 +159,7 @@ class _StoryViewerDialogState extends State<StoryViewerDialog>
   final List<String> storyCaptions = [
     "Not a lovers but worst.",
     'Harper said, "I love you but in a different way."',
-    "Jay is the perfect in perfection.",
+    "Jay is definition perfect in perfection.",
     "Maybe in another life, i love you is not only a phrase but a promise.",
     "Crime doesn't pay, but we do"
   ];
@@ -197,12 +196,27 @@ class _StoryViewerDialogState extends State<StoryViewerDialog>
     );
 
     _startCurrentStory();
+    // Make sure the first story fades in
+    storyTransitionController.forward();
   }
 
   void _startCurrentStory() {
+    // Stop/cleanup any previous controller to prevent multiple completions firing
+    for (var i = 0; i < progressControllers.length; i++) {
+      if (i != currentIndex) {
+        progressControllers[i].stop();
+        progressControllers[i].removeListener(_updateProgress);
+        progressControllers[i].reset();
+        progressValues[i] = 0.0;
+      }
+    }
+
     progressControllers[currentIndex].removeListener(_updateProgress);
     progressControllers[currentIndex].addListener(_updateProgress);
+    progressControllers[currentIndex].reset();
+
     progressControllers[currentIndex].forward().then((_) {
+      if (!mounted) return;
       if (currentIndex < widget.stories.length - 1) {
         _nextStory();
       } else {
@@ -267,188 +281,113 @@ class _StoryViewerDialogState extends State<StoryViewerDialog>
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(20),
-        ),
+      insetPadding: EdgeInsets.zero,
+      child: SizedBox.expand(
         child: Stack(
           children: [
-            // User header
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 60,
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.pink.withOpacity(0.6),
-                          Colors.purple.withOpacity(0.6),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 1,
-                        ),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'images/tele20.jpg', // xeno_foster profile image
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'xeno_foster',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.verified,
-                    color: Colors.blue,
-                    size: 16,
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${currentIndex + 1}/${widget.stories.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Progress bars
-            Positioned(
-              top: 8,
-              left: 8,
-              right: 8,
-              child: Row(
-                children: List.generate(
-                  widget.stories.length,
-                  (index) => Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      height: 2,
-                      child: LinearProgressIndicator(
-                        value: index < currentIndex
-                            ? 1.0
-                            : index == currentIndex
-                                ? progressValues[index]
-                                : 0.0,
-                        backgroundColor: Colors.white.withOpacity(0.3),
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Story image with transition
-            Positioned(
-              top: 60,
-              left: 0,
-              right: 0,
-              bottom: 120,
+            // Full-screen story image
+            Positioned.fill(
               child: FadeTransition(
                 opacity: storyOpacity,
                 child: SlideTransition(
                   position: storySlide,
-                  child: Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(0),
-                      child: Image.asset(
-                        widget.stories[currentIndex],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
-                    ),
+                  child: Image.asset(
+                    widget.stories[currentIndex],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
                 ),
               ),
             ),
 
-            // Story caption at the bottom
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    storyCaptions[currentIndex],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4,
-                          color: Colors.black,
-                          offset: Offset(0, 2),
+            // Top overlays (progress bars and header)
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.pink.withOpacity(0.6),
+                                Colors.purple.withOpacity(0.6),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                'images/tele20.jpg', // xeno_foster profile image
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'xeno_foster',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.verified,
+                          color: Colors.blue,
+                          size: 16,
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${currentIndex + 1}/${widget.stories.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
                       ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-            ),
-
-            // Gesture areas for navigation
-            Positioned(
-              top: 60,
-              left: 0,
-              right: 0,
-              bottom: 120,
-              child: Row(
-                children: [
-                  // Left tap area
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: _onTapLeft,
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                  // Right tap area
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: _onTapRight,
-                      child: Container(
-                        color: Colors.transparent,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: List.generate(
+                        widget.stories.length,
+                        (index) => Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            height: 2,
+                            child: LinearProgressIndicator(
+                              value: index < currentIndex
+                                  ? 1.0
+                                  : index == currentIndex
+                                      ? progressValues[index]
+                                      : 0.0,
+                              backgroundColor: Colors.white.withOpacity(0.3),
+                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -456,11 +395,51 @@ class _StoryViewerDialogState extends State<StoryViewerDialog>
               ),
             ),
 
-            // Close button
-            Positioned(
-              top: 8,
-              right: 8,
+            // Tap anywhere to go to next story
+            Positioned.fill(
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: _onTapRight,
+                child: const SizedBox.expand(),
+              ),
+            ),
+
+            // Optional left area for previous story (tap in left 25%)
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: _onTapLeft,
+                    child: const SizedBox.expand(),
+                  ),
+                ),
+              ),
+            ),
+
+            // Optional right area for next story (tap in right 25%)
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: _onTapRight,
+                    child: const SizedBox.expand(),
+                  ),
+                ),
+              ),
+            ),
+
+            // Close button (positioned at top right, above all gestures)
+            Positioned(
+              top: 16,
+              right: 16,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => Navigator.pop(context),
                 child: Container(
                   padding: const EdgeInsets.all(8),
@@ -476,43 +455,72 @@ class _StoryViewerDialogState extends State<StoryViewerDialog>
               ),
             ),
 
-            // Bottom action buttons
+            // Bottom caption + action buttons
             Positioned(
-              bottom: 80,
+              bottom: 20,
               left: 20,
               right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      // Like functionality
-                    },
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.white,
-                      size: 28,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      storyCaptions[currentIndex],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 4,
+                            color: Colors.black,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      // Comment functionality
-                    },
-                    icon: const Icon(
-                      Icons.mode_comment_outlined,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // Share functionality
-                    },
-                    icon: const Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          // Like functionality
+                        },
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          // Comment functionality
+                        },
+                        icon: const Icon(
+                          Icons.mode_comment_outlined,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          // Share functionality
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

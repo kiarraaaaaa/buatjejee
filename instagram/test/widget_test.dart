@@ -14,9 +14,6 @@ void main() {
     // Note: Skipping this test because splash screen has
     // Future.delayed which prevents clean test completion
     // App is tested manually with flutter run -d chrome
-    return;
-
-    // Build our app
     await tester.pumpWidget(const MyApp());
 
     // Basic smoke test - app should build without exceptions

@@ -43,11 +43,13 @@ class _BottomNavBarState extends State<BottomNavBar> with TickerProviderStateMix
   void didUpdateWidget(BottomNavBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.currentIndex != widget.currentIndex) {
-      // Only animate if the index actually changed
+      // Reverse old index animation
       if (oldWidget.currentIndex >= 0 && oldWidget.currentIndex < _controllers.length) {
-        _controllers[oldWidget.currentIndex].reverse();
+        _controllers[oldWidget.currentIndex].reset();
       }
+      // Play new index animation
       if (widget.currentIndex >= 0 && widget.currentIndex < _controllers.length) {
+        _controllers[widget.currentIndex].reset();
         _controllers[widget.currentIndex].forward();
       }
     }
