@@ -47,8 +47,6 @@ flutter:
     - images/tele21.jpg
     - images/tele22.jpg
     - images/tele23.jpg
-    - images/tele24.jpg
-    - images/tele25.jpg
 
     - audio/Again.mp3
     - audio/HimandI.mp3
@@ -60,3 +58,5 @@ flutter:
     - audio/Boyfriend.mp3
     - audio/Party.mp3
     - audio/Shameless.mp3
+    - audio/Machine.mp3
+    - audio/Swimming.mp3

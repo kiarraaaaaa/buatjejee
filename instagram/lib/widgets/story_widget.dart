@@ -55,73 +55,76 @@ class _StoryWidgetState extends State<StoryWidget> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        child: Row(
-          children: List.generate(
-            widget.stories.length,
-            (index) => ScaleTransition(
-              scale: _storyAnimations[index],
-              child: GestureDetector(
-                onTap: () {
-                  // Show story inline with progress bars visible
-                  showDialog(
-                    context: context,
-                    barrierColor: Colors.black.withOpacity(0.8),
-                    builder: (ctx) => StoryViewerDialog(
-                      stories: widget.stories,
-                      initialIndex: index,
-                    ),
-                  );
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.pink.withOpacity(0.6),
-                            Colors.purple.withOpacity(0.6),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+    return Center(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.stories.length,
+              (index) => ScaleTransition(
+                scale: _storyAnimations[index],
+                child: GestureDetector(
+                  onTap: () {
+                    // Show story inline with progress bars visible
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.8),
+                      builder: (ctx) => StoryViewerDialog(
+                        stories: widget.stories,
+                        initialIndex: index,
                       ),
-                      child: Container(
-                        width: 56,
-                        height: 56,
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.pink.withOpacity(0.6),
+                              Colors.purple.withOpacity(0.6),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
                         ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            widget.stories[index],
-                            fit: BoxFit.cover,
+                        child: Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
+                          child: ClipOval(
+                            child: Image.asset(
+                              widget.stories[index],
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      ["we", "are", "partner", "in", "crime"][index],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                      const SizedBox(height: 8),
+                      Text(
+                        ["we", "are", "partner", "in", "crime"][index],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

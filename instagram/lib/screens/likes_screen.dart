@@ -22,17 +22,17 @@ class _LikesScreenState extends State<LikesScreen> with TickerProviderStateMixin
       "liked": false,
     },
     {
-      "title": "Party 4 U",
-      "artist": "Charli XCX",
+      "title": "Swimming Pool",
+      "artist": "Lloyd ft August Alsina",
       "image": "images/tele9.jpg",
-      "audio": "audio/Party.mp3",
+      "audio": "audio/Swimming.mp3",
       "liked": false,
     },
     {
-      "title": "Rock That Body x Outside",
-      "artist": "Nightdrives",
+      "title": "The Machine",
+      "artist": "Reed Wonder & Aurora Olivas",
       "image": "images/tele8.jpg",
-      "audio": "audio/Rock.mp3",
+      "audio": "audio/Machine.mp3",
       "liked": false,
     },
     {

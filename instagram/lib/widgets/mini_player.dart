@@ -95,11 +95,14 @@ class _MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
               color: Colors.white.withOpacity(0.08),
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Album art
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Album art
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: Image.asset(
@@ -232,6 +235,7 @@ class _MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
                     default:
                       icon = Icons.repeat_one_rounded;
                       iconColor = Colors.white70;
+                      break;
                   }
 
                   return PopupMenuButton<PlaybackMode>(
@@ -291,9 +295,50 @@ class _MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
               ),
             ],
           ),
-        );
-      },
+          const SizedBox(height: 6),
+          ValueListenableBuilder<Duration>(
+            valueListenable: widget.controller.currentPositionNotifier,
+            builder: (context, position, child) {
+              return ValueListenableBuilder<Duration>(
+                valueListenable: widget.controller.totalDurationNotifier,
+                builder: (context, total, child) {
+                  final progress = total.inMilliseconds > 0
+                      ? position.inMilliseconds / total.inMilliseconds
+                      : 0.0;
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LinearProgressIndicator(
+                        value: progress.clamp(0.0, 1.0),
+                        backgroundColor: Colors.white24,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.pinkAccent),
+                        minHeight: 2,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            widget.controller.formatDuration(position),
+                            style: const TextStyle(color: Colors.white60, fontSize: 10),
+                          ),
+                          Text(
+                            widget.controller.formatDuration(total),
+                            style: const TextStyle(color: Colors.white60, fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
-  }
+  },
+);
+}
 }
 

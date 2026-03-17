@@ -117,7 +117,7 @@ class AudioController {
     return _playlist[_currentIndex];
   }
 
-  Future<void> playSong(String path, int index) async {
+  Future<void> playSong(String path, int index, {bool forceRestart = false}) async {
     await init();
 
     try {
@@ -131,7 +131,7 @@ class AudioController {
         return;
       }
 
-      if (_currentIndex == index) {
+      if (_currentIndex == index && !forceRestart) {
         debugPrint("Same song, toggling play/pause");
         await togglePlayPause();
         return;
@@ -224,10 +224,21 @@ class AudioController {
       return;
     }
 
+    // If no song has been selected yet, start from the first one.
+    if (_currentIndex < 0) {
+      await playSong(_playlist[0]["audio"], 0);
+      return;
+    }
+
     switch (playbackModeNotifier.value) {
       case PlaybackMode.repeat:
-        debugPrint("Repeat mode: replaying current song");
-        await playSong(_playlist[_currentIndex]["audio"], _currentIndex);
+        debugPrint("Repeat mode: restarting current song");
+        if (_currentIndex < 0 || _currentIndex >= _playlist.length) {
+          debugPrint("No current song to repeat");
+          return;
+        }
+        // Restart current song from the beginning without toggling pause.
+        await playSong(_playlist[_currentIndex]["audio"], _currentIndex, forceRestart: true);
         break;
       case PlaybackMode.shuffle:
         debugPrint("Shuffle mode: selecting random song");
@@ -247,7 +258,10 @@ class AudioController {
           debugPrint("Reached end of playlist, looping to first song");
         }
         debugPrint("Next index: $nextIndex");
-        await playSong(_playlist[nextIndex]["audio"], nextIndex);
+
+        // If the playlist has only one song (or we wrapped around), restart it rather than toggling pause.
+        final shouldForceRestart = nextIndex == _currentIndex;
+        await playSong(_playlist[nextIndex]["audio"], nextIndex, forceRestart: shouldForceRestart);
         break;
     }
   }
