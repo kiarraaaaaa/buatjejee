@@ -27,7 +27,7 @@ class DummyData {
         username: 'xeno_foster',
         userFullName: 'xeno foster',
         userAvatar: profileImage,
-        imageUrl: 'images/tele18.jpg',
+        imageUrl: 'images/tele19.jpg',
         caption: 'late night ride with the crew.',
         likes: 222410,
         comments: [
@@ -85,9 +85,20 @@ class DummyData {
     'hello, je',
     'how? you like it?',
     'its our secret talk',
-    'i just want to say that i love you',
-    'even though we cant, i cant lie to my feelings',
-    'but thats okay, i love us in this way',
-    'you can text here but you cant send it. just replied on my telegram, kay?'
+    'i just want to say, thank you for everything.',
+    'and im so sorry bout all my mistakes ive ever did',
+    'tbh,i love us in this way',
+    'lu adalah satu satunya yang gua punya, di telegram ini.',
+    'thank you udah bertahan sama sikap gua yang kadang menyebalkan',
+    'makasi tetap bertahan walau kita pernah beda pendapat',
+    'dan makasi juga udah selalu ada disaat gua butuh',
+    'and you must know that, i love to heard your voice so much.',
+    'so, keep talkin much when only two of us in this world',
+    'keep yapping pas kita lagi dc bareng',
+    'tetep ceritain segala hal yang perlu gua tau',
+    'because i love heard a lot bout you.',
+    'you can text here but you cant send it. just replied on my telegram, kay?',
+    'last bbc, hope we keep goin like this.',
+    'not in a romantic way but care each other.'
   ];
 }

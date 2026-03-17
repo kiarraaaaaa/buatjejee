@@ -235,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.grey.shade700),
                       ),
-                      child: const Text('Edit profile'),
+                      child: const Text('Following'),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -252,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.grey.shade700),
                       ),
-                      child: const Text('Secret Chat'),
+                      child: const Text('Messages'),
                     ),
                   ),
                 ],
