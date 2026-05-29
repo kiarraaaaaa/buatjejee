@@ -111,13 +111,13 @@ class _MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withAlpha(64),
                   blurRadius: 6,
                   offset: const Offset(0, 1),
                 ),
               ],
               border: Border.all(
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withAlpha(20),
               ),
             ),
             child: Column(
@@ -257,7 +257,6 @@ class _MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
                             iconColor = Colors.greenAccent;
                             break;
                           case PlaybackMode.normal:
-                          default:
                             icon = Icons.repeat_one_rounded;
                             iconColor = Colors.white70;
                             break;

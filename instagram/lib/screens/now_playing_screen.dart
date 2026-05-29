@@ -165,81 +165,85 @@ class _NowPlayingScreenState extends State<NowPlayingScreen>
                     const SizedBox(height: 30),
 
                     /// 🎤 LYRICS (INI DOANG YANG DIGANTI)
-                    Expanded(
-                      child: ValueListenableBuilder<Duration>(
-                        valueListenable:
-                            widget.controller.currentPositionNotifier,
-                        builder: (context, position, _) {
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 220),
+                        child: ValueListenableBuilder<Duration>(
+                          valueListenable:
+                              widget.controller.currentPositionNotifier,
+                          builder: (context, position, _) {
 
-                          final currentIndex =
-                              getCurrentIndex(lyrics, position);
+                            final currentIndex =
+                                getCurrentIndex(lyrics, position);
 
-                          return AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            switchInCurve: Curves.easeOutCubic,
-                            switchOutCurve: Curves.easeInCubic,
-                            transitionBuilder: (child, animation) {
-                              return ClipRect(
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0, 0.5),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              switchInCurve: Curves.easeOutCubic,
+                              switchOutCurve: Curves.easeInCubic,
+                              transitionBuilder: (child, animation) {
+                                return ClipRect(
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0, 0.5),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: Column(
-                              key: ValueKey(currentIndex),
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                              children: [
+                                );
+                              },
+                              child: Column(
+                                key: ValueKey(currentIndex),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
 
-                                /// PREV
-                                Text(
-                                  currentIndex > 0
-                                      ? lyrics[currentIndex - 1].text
-                                      : "",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                  /// PREV
+                                  Text(
+                                    currentIndex > 0
+                                        ? lyrics[currentIndex - 1].text
+                                        : "",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
 
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
 
-                                /// CURRENT
-                                Text(
-                                  lyrics[currentIndex].text,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                  /// CURRENT
+                                  Text(
+                                    lyrics[currentIndex].text,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
 
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
 
-                                /// NEXT
-                                Text(
-                                  currentIndex < lyrics.length - 1
-                                      ? lyrics[currentIndex + 1].text
-                                      : "",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                  /// NEXT
+                                  Text(
+                                    currentIndex < lyrics.length - 1
+                                        ? lyrics[currentIndex + 1].text
+                                        : "",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
 
