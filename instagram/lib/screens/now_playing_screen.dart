@@ -130,7 +130,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.6),
+                              color: Colors.black.withValues(alpha: 0.6),
                               blurRadius: 25,
                               offset: const Offset(0, 10),
                             ),
@@ -145,7 +145,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen>
                       ),
                     ),
 
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 10),
 
                     Text(
                       title,
@@ -162,13 +162,13 @@ class _NowPlayingScreenState extends State<NowPlayingScreen>
                           const TextStyle(color: Colors.grey),
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 16),
 
                     /// 🎤 LYRICS (INI DOANG YANG DIGANTI)
                     Flexible(
                       fit: FlexFit.loose,
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 220),
+                        constraints: const BoxConstraints(maxHeight: 260),
                         child: ValueListenableBuilder<Duration>(
                           valueListenable:
                               widget.controller.currentPositionNotifier,
