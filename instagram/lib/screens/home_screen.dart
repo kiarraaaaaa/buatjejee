@@ -3,6 +3,7 @@ import '../models/post_item.dart';
 import '../widgets/post_card.dart';
 import '../widgets/story_widget.dart';
 import 'dm_story_screen.dart';
+import 'memories_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<PostItem> posts;
@@ -47,7 +48,58 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const Spacer(),
-                      const Icon(Icons.favorite_border, color: Colors.white),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              transitionDuration: const Duration(milliseconds: 420),
+                              reverseTransitionDuration: const Duration(milliseconds: 320),
+                              pageBuilder: (context, animation, secondaryAnimation) => const MemoriesScreen(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                final slide = Tween<Offset>(begin: const Offset(0.1, 0), end: Offset.zero).animate(
+                                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                                );
+                                final scale = Tween<double>(begin: 0.96, end: 1.0).animate(
+                                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                                );
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: SlideTransition(
+                                    position: slide,
+                                    child: ScaleTransition(
+                                      scale: scale,
+                                      child: child,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFF1D1D1D),
+                            border: Border.all(color: Colors.white12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withAlpha(64),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(width: 16),
                       GestureDetector(
                         onTap: () {
