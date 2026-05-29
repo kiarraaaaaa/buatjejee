@@ -82,22 +82,17 @@ class DummyData {
   }
 
   static const List<String> chatMessages = [
-    'hello, partner.',
-    'how? you like it?',
-    'i just want to say, thank you for everything.',
-    'and im so sorry bout all my mistakes ive ever did',
-    'tbh, i love us in this way',
-    'lu adalah satu satunya yang gua punya, di telegram ini.',
-    'thank you udah bertahan sama sikap gua yang kadang menyebalkan',
-    'makasi tetap bertahan walau kita pernah beda pendapat',
-    'dan makasi juga udah selalu ada disaat gua butuh',
-    'and you must know that, i love to heard your voice so much.',
-    'so, keep talkin much when only two of us in this world',
-    'keep yapping pas kita lagi dc bareng',
-    'tetep ceritain segala hal yang perlu gua tau',
-    'because i love heard a lot bout you.',
-    'you can text here but you cant send it. just replied on my telegram, kay?',
-    'last, hope we keep goin like this.',
-    'not in a romantic way but care each other.'
+    'If people were to ask me, “Why Harper?”',
+    'Then my answer would simply be this:',
+    'Because he is the very definition of Jihoon himself.',
+    'Perfect in perfection.',
+    'And why do I care about him so much?',
+    'Honestly, I do not know either.',
+    'I just want to stay by his side, spend more time with him, and create countless memories together.',
+    'Of course, we have fought before. We argued, disagreed, and hurt each other at times.',
+    'But none of it ever became something serious.',
+    'Because we never tried to destroy each other behind our backs.',
+    'That is exactly why I love being friends with Harper.',
+    'Because he is loyalty itself.',
   ];
 }

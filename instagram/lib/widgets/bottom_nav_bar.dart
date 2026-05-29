@@ -69,7 +69,7 @@ class _BottomNavBarState extends State<BottomNavBar> with TickerProviderStateMix
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -87,7 +87,7 @@ class _BottomNavBarState extends State<BottomNavBar> with TickerProviderStateMix
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: widget.currentIndex == 0
-                      ? Colors.white.withOpacity(0.15)
+                      ? Colors.white.withValues(alpha: 0.15)
                       : Colors.transparent,
                 ),
                 child: const Icon(Icons.home_filled),
@@ -103,10 +103,10 @@ class _BottomNavBarState extends State<BottomNavBar> with TickerProviderStateMix
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: widget.currentIndex == 1
-                      ? Colors.white.withOpacity(0.15)
+                      ? Colors.white.withValues(alpha: 0.15)
                       : Colors.transparent,
                 ),
-                child: const Icon(Icons.favorite_border),
+                child: const Icon(Icons.music_note),
               ),
             ),
             label: '',
@@ -119,7 +119,7 @@ class _BottomNavBarState extends State<BottomNavBar> with TickerProviderStateMix
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: widget.currentIndex == 2
-                      ? Colors.white.withOpacity(0.15)
+                      ? Colors.white.withValues(alpha: 0.15)
                       : Colors.transparent,
                 ),
                 child: const Icon(Icons.person_outline),

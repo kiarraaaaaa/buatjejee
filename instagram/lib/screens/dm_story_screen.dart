@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Chapter {
   final String label;
@@ -439,24 +440,45 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
                           itemBuilder: (context, index) {
                             final isSelected = index == _selectedChapterIndex;
                             return GestureDetector(
-                              onTap: () => _selectChapter(index),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 240),
-                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? const Color(0xFF363D7A) : const Color(0xFF11131F),
-                                  borderRadius: BorderRadius.circular(22),
-                                  border: Border.all(
-                                    color: isSelected ? const Color(0xFF69E2FF) : Colors.white12,
-                                  ),
+                              onTap: () {
+                                SystemSound.play(SystemSoundType.click);
+                                _selectChapter(index);
+                              },
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween(begin: isSelected ? 0.98 : 1.0, end: isSelected ? 1.02 : 1.0),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOutBack,
+                                builder: (context, scale, child) => Transform.scale(
+                                  scale: scale,
+                                  child: child,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    _chapters[index].label,
-                                    style: TextStyle(
-                                      color: isSelected ? Colors.white : Colors.white54,
-                                      fontSize: 13,
-                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? const Color(0xFF363D7A) : const Color(0xFF11131F),
+                                    borderRadius: BorderRadius.circular(22),
+                                    border: Border.all(
+                                      color: isSelected ? const Color(0xFF69E2FF) : Colors.white12,
+                                    ),
+                                    boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(0xFF69E2FF).withAlpha(40),
+                                              blurRadius: 18,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _chapters[index].label,
+                                      style: TextStyle(
+                                        color: isSelected ? Colors.white : Colors.white54,
+                                        fontSize: 13,
+                                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -533,31 +555,47 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
                   child: Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton(
-                          onPressed: _selectedChapterIndex > 0 ? _showPreviousChapter : null,
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: _selectedChapterIndex > 0 ? const Color(0xFF69E2FF) : Colors.white12,
+                        child: GestureDetector(
+                          onTapDown: (_) => SystemSound.play(SystemSoundType.click),
+                          onTap: _selectedChapterIndex > 0 ? _showPreviousChapter : null,
+                          child: AnimatedScale(
+                            scale: _selectedChapterIndex > 0 ? 1.0 : 1.0,
+                            duration: const Duration(milliseconds: 160),
+                            child: OutlinedButton(
+                              onPressed: _selectedChapterIndex > 0 ? _showPreviousChapter : null,
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color: _selectedChapterIndex > 0 ? const Color(0xFF69E2FF) : Colors.white12,
+                                ),
+                                foregroundColor: Colors.white,
+                                backgroundColor: const Color(0xFF11131F),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              child: const Text('Previous'),
                             ),
-                            foregroundColor: Colors.white,
-                            backgroundColor: const Color(0xFF11131F),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
-                          child: const Text('Previous'),
                         ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
-                        child: ElevatedButton(
-                          onPressed: _selectedChapterIndex < _chapters.length - 1 ? _showNextChapter : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF69E2FF),
-                            foregroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: GestureDetector(
+                          onTapDown: (_) => SystemSound.play(SystemSoundType.click),
+                          onTap: _selectedChapterIndex < _chapters.length - 1 ? _showNextChapter : null,
+                          child: AnimatedScale(
+                            scale: _selectedChapterIndex < _chapters.length - 1 ? 1.0 : 1.0,
+                            duration: const Duration(milliseconds: 160),
+                            child: ElevatedButton(
+                              onPressed: _selectedChapterIndex < _chapters.length - 1 ? _showNextChapter : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF69E2FF),
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              child: const Text('Next'),
+                            ),
                           ),
-                          child: const Text('Next'),
                         ),
                       ),
                     ],
