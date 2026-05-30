@@ -599,7 +599,6 @@ Map<String, List<LyricLine>> lyricsData = {
   LyricLine(Duration(milliseconds: 207060), "It's 'bout to be the sleepless night"),
   LyricLine(Duration(milliseconds: 209050), "You've been dreaming of"),
   LyricLine(Duration(milliseconds: 211970), "The fate of Ophelia"),
-  LyricLine(Duration(milliseconds: 215690), "You saved my heart from the fate of"),
   LyricLine(Duration(milliseconds: 218590), "Ophelia"),
 ],
 
