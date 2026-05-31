@@ -5,6 +5,27 @@ class DummyData {
 
   static const String username = 'xeno_foster';
   static const String profileName = 'xeno foster';
+  static const String secretKeyword = 'harper';
+
+  static const String secretTitle =
+      'Congrats! You found the hidden conversation!';
+
+  static const List<String> hiddenMessages = [
+    'Is that you, right?',
+    'You know Harper, i can\'t lie to my self.',
+    'I used to have feelings for you because I felt that comfortable with you. That\'s why I always wanted to keep communicating with you.',
+    'Even the smallest things we\'ve done together keep replaying in my mind. It\'s because there was a time when I genuinely liked you.',
+    'I know I was wrong to confess this, and I only want you to know how I feel, Je.',
+    'I\'m also comfortable with the relationship we have now, even though sometimes I wish it could be more romantic.',
+    'I know you\'ve been trying to keep some distance so that I wouldn\'t get too deeper feelings for you',
+    'I\'m sorry if my feelings have made things difficult for you, or made our relationship less comfortable than it used to be.',
+    'But believe me, I\'m okay',
+    'Even if one day you become close to someone else, I\'ll be ready for that.',
+    'So please, keep telling me about whatever is going on in your life, okay?',
+    'Thank you for being my platonic partner.',
+    'I\'m really happy that we\'ve become this close.',
+    'From your partner, Xeno Foster.',
+  ];
 
   static List<PostItem> posts() {
     return [
@@ -96,3 +117,4 @@ class DummyData {
     'Because he is loyalty itself.',
   ];
 }
+
