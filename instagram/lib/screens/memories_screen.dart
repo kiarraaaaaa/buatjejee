@@ -102,27 +102,34 @@ class _MemoriesScreenState extends State<MemoriesScreen>
                 ),
 
                 Positioned(
-                  left: 16,
-                  bottom: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withAlpha(115),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Text(
-                      label,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ),
-                ),
+  left: 12,
+  right: 12,
+  bottom: 12,
+  child: Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 10,
+      vertical: 8,
+    ),
+    decoration: BoxDecoration(
+      color: Colors.black.withOpacity(.55),
+      borderRadius: BorderRadius.circular(14),
+    ),
+    child: Text(
+      label,
+      textAlign: TextAlign.center,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize:
+            MediaQuery.of(context).size.width < 400
+                ? 11
+                : 12,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ),
+),
               ],
             ),
           ),
