@@ -111,7 +111,7 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
     ),
     Chapter(
       label: 'Chapter 4',
-      title: 'A Liar',
+      title: 'A Liar.',
       paragraphs: [
         'Xeno stared at Harper for a long moment, trying to understand every word he had just said.',
         'Of course, he did not want to lose Harper. Harper was the very reason he had managed to stay at this school for so long.',
@@ -190,6 +190,55 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
         '"I\'m sorry."',
       ],
     ),
+    Chapter(
+  label: 'Chapter 6',
+  title: 'Sorry.',
+  paragraphs: [
+        'After a difficult night filled with emotions, Harper finally decided to stay at Xeno’s house. He helped treat his injuries and carefully wrapped bandages around the muscular body that was covered in wounds.',
+        'Silence lingered between them.',
+        'Harper felt guilty and feared that Xeno would be disappointed in him once again.',
+        'Meanwhile, Xeno held back his true feelings, afraid that Harper would overthink everything if he revealed too much.',
+        'Two friends with completely opposite perspectives—was this the end of everything?',
+        'Xeno let out a quiet sigh.',
+        '"I know your perspective is valid too, Harper. If you think I should have taken you away from all of this, then I would have done it."',
+        'Silence followed.',
+        'Harper gave no response.',
+        '"But you also need to change the way you see me. I’m not a stranger in your life, and I’m not just an ordinary friend. If I keep trying while you refuse to open the door for me, then it’s all meaningless."',
+        'Xeno pulled a cigarette from his pocket and lit it with a lighter.',
+        'He deliberately blew the smoke away from Harper’s face, knowing how much Harper hated cigarette smoke.',
+        '"But I understand. If you still can’t let go of your own world after all this time, then maybe I’m simply not that person."',
+        'Harper looked at Xeno, and Xeno returned the gaze.',
+        '"That doesn’t mean I’m tired of being your friend. I started all of this, and I’m not going to end it that easily."',
+        'Xeno stood up, his tall figure towering over Harper.',
+        'He refused to show how disappointed he truly felt.',
+        'At the same time, he didn’t want to burden Harper with the expectations born from his own feelings.',
+        'Eventually, Xeno headed up to the rooftop of his house, and Harper followed.',
+        'The night breeze swept through Xeno’s dark hair and Harper’s pink hair.',
+        'For a moment, Harper’s thoughts drifted back to the first time they met.',
+        'Back when they would talk endlessly to each other, just the two of them, with no one around to interrupt.',
+        'Finally, Harper spoke.',
+        '"I know I was wrong. I’m really sorry."',
+        'Xeno exhaled a cloud of smoke into the night air.',
+        '"I realized it when you said it. I never thought this problem could become so serious."',
+        'Harper gently tugged at Xeno’s shoulder, careful not to hurt the wounds hidden beneath the bandages, encouraging him to look back at him.',
+        '"I promise I won’t let this happen again. Please believe me when I say that I understand my mistake now."',
+        '"I’ll always try to be better for our relationship."',
+        'Hearing those words, Xeno looked directly into Harper’s eyes.',
+        'The silence stretched between them as they held each other’s gaze for what felt like an eternity.',
+        'Finally, Xeno smiled and looked up at the beautiful night sky.',
+        'The storm had already passed.',
+        '"Looks like even the sky still wants us to stay be friends."',
+        '"I’m not foolish enough to let you go that easily."',
+        'Harper looked at him and let out a quiet laugh.',
+        '"So... does that mean this problem is over? Done?"',
+        'Xeno turned toward him and slowly stepped closer.',
+        'Their faces were only a few inches apart.',
+        '"Done?"',
+        'Xeno repeated, noticing the faint blush spreading across Harper’s cheeks.',
+        '"No."',
+        '"We’re just getting started."',
+  ],
+),
   ];
 
   int _selectedChapterIndex = 0;
@@ -244,11 +293,13 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
     });
   }
 
-  void _showNextChapter() {
-    if (_selectedChapterIndex < _chapters.length - 1) {
-      _selectChapter(_selectedChapterIndex + 1);
-    }
+void _showNextChapter() {
+  if (_selectedChapterIndex < _chapters.length - 1) {
+    _selectChapter(_selectedChapterIndex + 1);
+  } else {
+    _selectChapter(0);
   }
+}
 
   void _showPreviousChapter() {
     if (_selectedChapterIndex > 0) {
@@ -616,27 +667,37 @@ class _DmStoryScreenState extends State<DmStoryScreen> with SingleTickerProvider
                           ),
                         ),
                       ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: GestureDetector(
-                          onTapDown: (_) => SystemSound.play(SystemSoundType.click),
-                          onTap: _selectedChapterIndex < _chapters.length - 1 ? _showNextChapter : null,
-                          child: AnimatedScale(
-                            scale: _selectedChapterIndex < _chapters.length - 1 ? 1.0 : 1.0,
-                            duration: const Duration(milliseconds: 160),
-                            child: ElevatedButton(
-                              onPressed: _selectedChapterIndex < _chapters.length - 1 ? _showNextChapter : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF69E2FF),
-                                foregroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                              ),
-                              child: const Text('Next'),
-                            ),
-                          ),
-                        ),
-                      ),
+                    const SizedBox(width: 14),
+Expanded(
+  child: GestureDetector(
+    onTapDown: (_) => SystemSound.play(SystemSoundType.click),
+    onTap: _showNextChapter,
+    child: AnimatedScale(
+      scale: 1.0,
+      duration: const Duration(milliseconds: 160),
+      child: ElevatedButton(
+        onPressed: _showNextChapter,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF69E2FF),
+          foregroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        child: Text(
+          _selectedChapterIndex == _chapters.length - 1
+              ? 'Back to Chapter One?'
+              : 'Next',
+        ),
+      ),
+    ),
+  ),
+),
+                            
+                          
+                        
+                      
                     ],
                   ),
                 ),
